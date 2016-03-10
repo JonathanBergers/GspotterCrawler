@@ -9,8 +9,8 @@ import requests
 
 class GamescraperPipeline(object):
     def process_item(self, item, spider):
-        r = requests.post('http://localhost:1337/review',
-                          json={"title": item['title'], 'rating': item['rating'], 'genre': item['genre'],
-                                'url': item['review_url'], 'platforms': item['platforms']})
-        print(r)
+        # r = requests.post('http://localhost:1337/review',
+        #                   json={"title": item['title'], 'rating': item['rating'], 'genre': item['genre'],
+        #                         'url': item['review_url'], 'platforms': item['platforms']})
+        # print(r)
         return item
