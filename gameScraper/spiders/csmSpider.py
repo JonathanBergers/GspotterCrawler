@@ -2,6 +2,8 @@
 import scrapy
 
 
+
+
 class CsmspiderSpider(scrapy.Spider):
     name = "csmSpider"
     DOMAIN_NAME = 'https://www.commonsensemedia.org'
