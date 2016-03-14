@@ -38,24 +38,27 @@ class GamespotspiderSpider(scrapy.Spider):
             headers['review_filter_type[genre]'] = i[0]
 
             print(i)
+            # For every genre start the crawler for the pages in this genre
             # yield ipv return
             yield scrapy.Request(url='http://www.gamespot.com/reviews/', headers=headers,
-                                 meta={"genre_id": i[0], "genre_title": i[1]}, callback=self.parse_review_page)
+                                 meta={"genre_id": i[0], "genre_title": i[1]}, callback=self.start_review_pages_crawl)
 
-    def parse_review_page(self, response):
-        reviews_xpath = response.xpath('//*[@id="js-sort-filter-results"]/section/article')
-
+    # This method starts the crawling for all the review pages in the genre
+    def start_review_pages_crawl(self, response):
         last_page = response.xpath('//*[@id="js-sort-filter-results"]/ul/li[last()]/a/@href').extract()[0].split('=')[
                     -1:][0]
-
-        # TODO fix page numbers
-        # for i in range(0, int(last_page)):
-        #     header = self.build_headers(response.meta['genre_id'])
-        #     header['page'] = str(i)
-        #     req = scrapy.Request(url='http://www.gamespot.com/reviews/', headers=header, callback=self.parse_review_page, meta=response.meta)
-        #     yield req
-
         print('last page ', last_page)
+        for i in range(0, int(last_page)):
+            header = self.build_headers(response.meta['genre_id'])
+            header['page'] = str(i)
+            req = scrapy.Request(url='http://www.gamespot.com/reviews/', headers=header,
+                                 callback=self.parse_review_page, meta=response.meta)
+            yield req
+
+    def parse_review_page(self, response):
+        print('parsing review')
+        reviews_xpath = response.xpath('//*[@id="js-sort-filter-results"]/section/article')
+
         genre = response.meta['genre_title']
         for i in reviews_xpath:
             review = {}
