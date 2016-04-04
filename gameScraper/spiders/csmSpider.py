@@ -43,7 +43,7 @@ class CsmspiderSpider(scrapy.Spider):
             review_classes = xpath_rating.xpath('.//@class').extract()[0].split(' ')
             for j in review_classes:
                 if j.startswith('rating-'):
-                    review['rating'] = j.strip()[7:]
+                    review['rating'] = int(j.strip()[7:]) * 2
                     break
             # print(review)
             req = scrapy.Request(url=review['review_url'], callback=self.parse_review)
